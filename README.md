@@ -4,6 +4,16 @@
 
 KeyMouseBattery 是一款使用 Python / PySide6 开发的 Windows 电量工具。界面采用灰白配色，支持多设备记录、连接排序、低电量提醒与开机启动设置。
 
+## 下载即用
+
+**[⬇ 下载 KeyMouseBattery 0.4.0-dev 便携版（Windows 64 位）](https://github.com/xiexianhao666-sys/KeyMouseBattery/releases/latest)** · 约 47 MB · 不用装 Python
+
+1. 下载 ZIP，**整包解压**到可写目录（`_internal` 必须和 exe 在一起）。
+2. 双击 `KeyMouseBattery.exe`。
+3. 托盘出现电量图标即可用：左键开面板，右键开菜单。
+
+SmartScreen 提示「未知发布者」时，点「更多信息 → 仍要运行」；程序未签名，属正常提示。
+
 ## 功能预览
 
 ### 设备电量一目了然
