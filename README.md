@@ -85,9 +85,3 @@ KeyMouseBattery 是一款使用 Python / PySide6 开发的 Windows 电量工具�
 ## 许可与致谢
 
 KeyMouseBattery 是独立维护的 Python / PySide6 项目，采用 MIT 许可证。第三方依赖、图标许可及早期协议参考资料见 [CREDITS.md](CREDITS.md)，版权与许可文本见 [LICENSE](LICENSE)。
-
-## 从旧开发版升级
-
-旧开发版使用 `VigilWattPy` 名称。先在旧版设置中关闭开机启动并保存，再退出旧版；新版启动后重新开启自启动。新版使用独立的 `KeyMouseBattery` 注册项与单实例标识，不会自动删除旧版注册项。
-
-配置与设备记录仍使用 `data/config.json`、`data/devices.json`；需要保留时，在两个程序都退出后复制到新版目录。新日志名称为 `keymousebattery.log`。应用入口与构建产物改为 `KeyMouseBattery.pyw` 和 `KeyMouseBattery.exe`。
