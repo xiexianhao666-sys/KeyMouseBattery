@@ -6,7 +6,7 @@ KeyMouseBattery 是一款使用 Python / PySide6 开发的 Windows 电量工具�
 
 ## 下载即用
 
-**[⬇ 下载 KeyMouseBattery 0.4.2-dev 便携版（Windows 64 位）](https://github.com/xiexianhao666-sys/KeyMouseBattery/releases/latest)** · 约 47 MB · 不用装 Python
+**[⬇ 下载 KeyMouseBattery 0.4.3-dev 便携版（Windows 64 位）](https://github.com/xiexianhao666-sys/KeyMouseBattery/releases/latest)** · 约 47 MB · 不用装 Python
 
 1. 下载 ZIP，**整包解压**到可写目录（`_internal` 必须和 exe 在一起）。
 2. 双击 `KeyMouseBattery.exe`。
@@ -40,7 +40,7 @@ SmartScreen 提示「未知发布者」时，点「更多信息 → 仍要运行
 
 ## 适配设备
 
-适配情况按型号与连接方式记录，以下为 `0.4.2-dev` 的范围。
+适配情况按型号与连接方式记录，以下为 `0.4.3-dev` 的范围。
 
 | 设备 | 连接方式 | 状态 |
 | --- | --- | --- |
@@ -80,7 +80,7 @@ SmartScreen 提示「未知发布者」时，点「更多信息 → 仍要运行
 
 ## 开发状态
 
-`0.4.2-dev` 已发布便携包，后续工作：
+`0.4.3-dev` 已发布便携包，后续工作：
 
 - 补充真实登录自启、高 DPI、多屏及任务栏深浅切换的逐项验证。
 - 蓝牙候选枚举单轮上限为 8 台、候选池 64 台，设备特别多时按轮转补齐。

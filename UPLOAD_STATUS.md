@@ -1,6 +1,6 @@
 # 发布状态
 
-2026-10-31：`0.4.2-dev` 已在 [Releases](https://github.com/xiexianhao666-sys/KeyMouseBattery/releases/latest) 提供 Windows 64 位便携包，下载解压即可运行，无需安装 Python。
+2026-10-31：`0.4.3-dev` 已在 [Releases](https://github.com/xiexianhao666-sys/KeyMouseBattery/releases/latest) 提供 Windows 64 位便携包，下载解压即可运行，无需安装 Python。
 
 ## 仓库内容
 
@@ -15,10 +15,10 @@
 
 | 制品 | 大小 | SHA-256 |
 | --- | --- | --- |
-| `KeyMouseBattery-0.4.2-dev-win64.zip` | 48 813 055 B | `29adb964fb9a0316544cf88d510a135253be245c5afab8406708394cf4f3e392` |
-| 包内 `KeyMouseBattery.exe` | 2 974 635 B | `1e5e50186d4042069490a6c3fd66c997d5d6c1bfdc587942ed80698493a696df` |
+| `KeyMouseBattery-0.4.3-dev-win64.zip` | 48 823 037 B | `07d34dd7f1add6e9c5047c88583bf0b6d58421caaf8700c75b14c8d0470e0d8a` |
+| 包内 `KeyMouseBattery.exe` | 2 975 535 B | `e7eee737c692b0ee3aa6db8731cc90010f5910fed7d16177cb01987c690e929b` |
 
-发布前验证：`169` 项单元测试通过；冻结版 `--version` / `--probe` / `--shot` 均 exit 0；解压后版本串为 `KeyMouseBattery · 键鼠电量 0.4.2-dev`。
+发布前验证：`169` 项单元测试通过；冻结版 `--version` / `--probe` / `--shot` 均 exit 0；解压后版本串为 `KeyMouseBattery · 键鼠电量 0.4.3-dev`。
 
 ## 当前状态
 

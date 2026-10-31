@@ -1010,7 +1010,7 @@ class SettingsPage(QWidget):
         parent.addWidget(label)
 
     def _row(self, parent: QVBoxLayout, title: str, hint: str) -> QHBoxLayout:
-        wrapper = QFrame()
+        wrapper = _RowFrame()
         wrapper.setStyleSheet("border-bottom: 1px solid %s;" % BORDER)
         wrapper.setMinimumHeight(68)
         row = QHBoxLayout(wrapper)
@@ -1045,6 +1045,11 @@ class SettingsPage(QWidget):
         row = self._row(parent, title, hint)
         box = Switch()
         row.addWidget(box, 0, Qt.AlignVCenter)
+        wrapper = row.parentWidget()
+        if isinstance(wrapper, _RowFrame):
+            # 整行可点：点标题或说明文字也会切换开关，避免只认 40x22 的小开关
+            wrapper.switch = box
+            wrapper.setCursor(Qt.PointingHandCursor)
         return box
 
     def load(self, cfg: dict) -> None:
@@ -1106,6 +1111,17 @@ class SettingsPage(QWidget):
         self.autostart_note.setText(text)
         colour = AMBER if warn else MUTED
         self.autostart_note.setStyleSheet("font-size: 11px; color: %s;" % colour)
+
+
+class _RowFrame(QFrame):
+    """设置行容器：除了右侧开关，点这一行任意位置也能切换它。"""
+
+    switch = None
+
+    def mouseReleaseEvent(self, event) -> None:  # noqa: N802 - Qt 命名
+        if self.switch is not None and event.button() == Qt.LeftButton:
+            self.switch.toggle()
+        super().mouseReleaseEvent(event)
 
 
 class NavButton(QPushButton):

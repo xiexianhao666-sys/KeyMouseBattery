@@ -410,11 +410,11 @@ class App:
             self.cfg["autostart"] = bool(previous.get("autostart"))
             if self.config_path is not None:
                 config.write_atomic(self.config_path, self.cfg)
+            reason = note or state.note or "无法确认自启状态"
             self.window.settings_page.set_autostart_state(
-                bool(self.cfg.get("autostart")), state.note, warn=True)
+                bool(self.cfg.get("autostart")), reason, warn=True)
             self.window.settings_page.show_result(
-                False, "%s（%s；其它设置已保存并生效）"
-                % (note or "无法确认自启状态", state.note))
+                False, "%s（其它设置已保存并生效）" % reason)
             return
         actual = bool(state.registered)
         if not done or actual != desired_autostart:
@@ -422,9 +422,12 @@ class App:
             self.cfg["autostart"] = actual
             if self.config_path is not None:
                 config.write_atomic(self.config_path, self.cfg)
-            self.window.settings_page.set_autostart_state(actual, state.note, warn=True)
+            reason = note or state.note or "自启未生效"
+            LOGGER.warning("开机启动未生效：%s", reason)
+            # 行内也要显示原因，否则用户只看到开关自己弹回去
+            self.window.settings_page.set_autostart_state(actual, reason, warn=True)
             self.window.settings_page.show_result(
-                False, "%s（其它设置已保存并生效）" % (note or state.note or "自启未生效"))
+                False, "%s（其它设置已保存并生效）" % reason)
             return
         self.cfg["autostart"] = actual
         if self.config_path is not None:

@@ -150,6 +150,18 @@ def read_state(exe: Optional[Path] = None) -> Tuple[bool, str, str]:
 
 
 
+PERMISSION_HINT = ("没有写入启动项的权限。当前文件夹可能受保护（例如位于受限/沙盒目录），"
+                   "请把程序解压到普通文件夹（如 D:\\Tools\\KeyMouseBattery 或桌面）后重试")
+
+
+def _is_denied(exc: OSError) -> bool:
+    """权限类错误：Windows 拒绝访问（winerror 5）或被沙盒拦截。"""
+    if isinstance(exc, PermissionError):
+        return True
+    winerror = getattr(exc, "winerror", None)
+    return winerror in (5, 1314) or getattr(exc, "errno", None) in (5, 13, 1314)
+
+
 def enable(exe: Optional[Path] = None) -> Tuple[bool, str]:
     if not is_supported():
         return False, "源码运行不支持开机自启，请使用便携包里的 exe"
@@ -157,6 +169,8 @@ def enable(exe: Optional[Path] = None) -> Tuple[bool, str]:
     try:
         _BACKEND.set(VALUE_NAME, command)
     except OSError as exc:
+        if _is_denied(exc):
+            return False, PERMISSION_HINT
         return False, "写入启动项失败：%s" % exc
     state = inspect(exe)
     if not state.readable:
@@ -171,6 +185,8 @@ def disable() -> Tuple[bool, str]:
     try:
         removed = _BACKEND.delete(VALUE_NAME)
     except OSError as exc:
+        if _is_denied(exc):
+            return False, PERMISSION_HINT
         return False, "删除启动项失败：%s" % exc
     readable, raw = _raw_value()
     if not readable:

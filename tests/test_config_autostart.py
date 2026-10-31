@@ -1,4 +1,4 @@
-﻿"""配置迁移、越界修复、写入失败反馈与自启注册项。"""
+"""配置迁移、越界修复、写入失败反馈与自启注册项。"""
 
 from __future__ import annotations
 
@@ -118,6 +118,47 @@ class AutostartTests(unittest.TestCase):
     def test_source_run_is_unsupported(self) -> None:
         with mock.patch("keymousebattery.autostart.identity.is_frozen", return_value=False):
             self.assertFalse(autostart.is_supported())
+
+    def test_enable_denied_by_permissions_explains_folder_hint(self) -> None:
+        # 0.4.3：受限目录里写注册表会被拒绝，返回的说明必须告诉用户换个文件夹
+        with mock.patch.object(self.registry, "set",
+                               side_effect=PermissionError(13, "拒绝访问。")):
+            ok, note = autostart.enable(exe=r"D:\apps\demo\KeyMouseBattery.exe")
+        self.assertFalse(ok)
+        self.assertIn("权限", note)
+        self.assertIn("普通文件夹", note)
+
+    def test_disable_denied_by_permissions_explains_folder_hint(self) -> None:
+        self.registry.values[autostart.VALUE_NAME] = '"D:\\apps\\demo\\KeyMouseBattery.exe" --background'
+        with mock.patch.object(self.registry, "delete",
+                               side_effect=OSError(5, "拒绝访问。")):
+            ok, note = autostart.disable()
+        self.assertFalse(ok)
+        self.assertIn("普通文件夹", note)
+
+
+class ClickRowTests(unittest.TestCase):
+    """0.4.3：设置页的开关行整行可点，不要求精准点中 40x22 的小开关。"""
+
+    def setUp(self) -> None:
+        from PySide6.QtWidgets import QApplication
+        from keymousebattery import ui
+        self.ui = ui
+        self.app = QApplication.instance() or QApplication([])
+
+    def test_clicking_row_toggles_switch(self) -> None:
+        from PySide6.QtCore import Qt
+        from PySide6.QtGui import QMouseEvent
+        from PySide6.QtCore import QPointF
+        page = self.ui.SettingsPage()
+        switch = page.autostart
+        before = switch.isChecked()
+        frame = switch.parentWidget()
+        event = QMouseEvent(QMouseEvent.MouseButtonRelease, QPointF(5, 5),
+                            Qt.LeftButton, Qt.NoButton, Qt.NoModifier)
+        frame.mouseReleaseEvent(event)
+        self.assertNotEqual(switch.isChecked(), before)
+        page.deleteLater()
 
 
 if __name__ == "__main__":

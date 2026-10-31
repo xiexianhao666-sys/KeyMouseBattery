@@ -10,7 +10,7 @@ from pathlib import Path
 APP_ID = "KeyMouseBattery"
 APP_NAME = "键鼠电量"
 APP_TAGLINE = "电量一目了然"
-APP_VERSION = "0.4.2-dev"
+APP_VERSION = "0.4.3-dev"
 APP_DESCRIPTION = "Windows 无线键鼠电量工具"
 
 MUTEX_NAME = "Local\\KeyMouseBattery_single_instance"
