@@ -1,6 +1,6 @@
 # 发布状态
 
-2026-10-31：`0.4.0-dev` 已在 [Releases](https://github.com/xiexianhao666-sys/KeyMouseBattery/releases/latest) 提供 Windows 64 位便携包，下载解压即可运行，无需安装 Python。
+2026-10-31：`0.4.1-dev` 已在 [Releases](https://github.com/xiexianhao666-sys/KeyMouseBattery/releases/latest) 提供 Windows 64 位便携包，下载解压即可运行，无需安装 Python。
 
 ## 仓库内容
 
@@ -15,14 +15,15 @@
 
 | 制品 | 大小 | SHA-256 |
 | --- | --- | --- |
-| `KeyMouseBattery-0.4.0-dev-win64.zip` | 48 817 770 B | `a3cf11e8c5000381b6805989f2def6dfc5f25a81f9c9ad2f6e3e1f6cbdc77319` |
-| 包内 `KeyMouseBattery.exe` | 2 971 741 B | `92e144c33d0747684e4062d7085c6be017a2f66d03d27e8afb991a73aa885d61` |
+| `KeyMouseBattery-0.4.1-dev-win64.zip` | 48 817 557 B | `6193124cd64d713cc1f40c0af581372476d6e5e4cdb4d1b5965cae10324899f2` |
+| 包内 `KeyMouseBattery.exe` | 2 971 910 B | `d49e97ee0601139dc4a29c9a54c7fb7f10dde7f64151e73a5d74090e13832f91` |
 
-发布前验证：`157` 项单元测试通过；冻结版 `--version` / `--probe` / `--shot` 均 exit 0；解压后版本串为 `KeyMouseBattery · 键鼠电量 0.4.0-dev`。
+发布前验证：`169` 项单元测试通过；冻结版 `--version` / `--probe` / `--shot` 均 exit 0；解压后版本串为 `KeyMouseBattery · 键鼠电量 0.4.1-dev`。
 
 ## 当前状态
 
-- 同类别 BLE 记录与独立 USB 设备并存的显示问题已修复（`poller.merge_usb_channels`）。
+- 同类别 BLE 记录与独立 USB 设备并存的显示问题已修复（`poller.merge_usb_channels`，只在与在线蓝牙同类别时合并）。
+- 0.4.1：修复「立即刷新」按钮一直停在“刷新中…”；插上接收器但读不到电量时仍显示卡片（“电量暂不可用”）。
 - 蓝牙单轮枚举 8 台、候选池 64 台，按轮转继续读取。
 - 未验证：真实登录自启（注册表写入）、高 DPI 150%/200%、多屏、任务栏左右/顶部位置。
 - 程序未签名，SmartScreen 会提示未知发布者。

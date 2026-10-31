@@ -41,12 +41,14 @@ class MergeTests(unittest.TestCase):
         ]
         self.assertEqual(1, len(merge_usb_channels(devices)))
 
-    def test_usb_keyboard_hidden_when_ble_record_offline(self) -> None:
+    def test_usb_keyboard_kept_when_ble_keyboard_offline(self) -> None:
+        # 现场问题：键盘切到 2.4G 后只剩一条离线蓝牙记录，不能因此把接收器卡也吞掉。
         devices = [
             device("ble:k", "MCHOSE G75 5.0", "keyboard", "ble", False, None),
             device("usb:compx-receiver", "迈从 G75 Pro", "keyboard", "usb", True, 100),
         ]
-        self.assertEqual(1, len(merge_usb_channels(devices)))
+        kept = merge_usb_channels(devices)
+        self.assertEqual({"ble:k", "usb:compx-receiver"}, {item.key for item in kept})
 
     def test_usb_keyboard_kept_when_no_ble_keyboard_at_all(self) -> None:
         devices = [
@@ -62,12 +64,12 @@ class MergeTests(unittest.TestCase):
         ]
         self.assertEqual(1, len(merge_usb_channels(devices)))
 
-    def test_usb_mouse_hidden_when_ble_mouse_record_exists(self) -> None:
+    def test_usb_mouse_kept_when_ble_mouse_offline(self) -> None:
         devices = [
             device("ble:m", "ELECOM EX-G", "mouse", "ble", False, None),
             device("usb:m", "ELECOM EX-G", "mouse", "usb", True, 100),
         ]
-        self.assertEqual(1, len(merge_usb_channels(devices)))
+        self.assertEqual(2, len(merge_usb_channels(devices)))
 
 
 if __name__ == "__main__":  # pragma: no cover

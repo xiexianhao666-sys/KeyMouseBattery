@@ -29,7 +29,7 @@ from .tray import TrayIcons
 LOGGER = logging.getLogger("keymousebattery.app")
 TICK_MS = 1000
 SHOW_POLL_MS = 500
-REFRESH_FEEDBACK_SECONDS = 90.0
+REFRESH_FEEDBACK_SECONDS = 20.0
 WAIT_OBJECT_0 = 0
 EVENT_MODIFY_STATE = 0x0002
 ERROR_ALREADY_EXISTS = 183
@@ -222,7 +222,8 @@ class App:
         if self.collector is not None:
             self.collector.refresh_now()
         if self.window is not None:
-            self._refresh_deadline = time.time() + REFRESH_FEEDBACK_SECONDS
+            # 必须记下“从什么时候开始等”，否则刷新按钮会一直停在“刷新中…”。
+            self._refresh_from = time.time()
             self.window.begin_refresh()
 
     def show_panel(self) -> None:

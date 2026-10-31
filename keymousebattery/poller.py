@@ -223,21 +223,20 @@ def model_tokens(name: str) -> set:
 
 
 def merge_usb_channels(devices: Sequence[Device]) -> List[Device]:
-    """同一类设备只要已有蓝牙记录，就不再单列接收器那张卡。
+    """同类设备**当前确实连着蓝牙**时，接收器那张卡视为同一条通道，不重复显示。
 
-    接收器不提供设备标识（只有“一把键盘”和一次读数），型号名还可能是旧缓存，
-    无法判断是不是同一把键盘；而同一把键盘会同时出现在两条通道里。这里用结构性
-    规则：某个类别（键盘/鼠标/耳机…）已经有蓝牙设备时，接收器通道的记录视为同一
-    台设备的另一条通道，只保留蓝牙那张卡；该类别没有任何蓝牙设备时，接收器卡片
-    照常显示，保证只插接收器也能看到电量。
+    只统计“在线 + 状态已确认 + 有读数”的蓝牙设备：键盘关掉、切到 2.4G，或只是
+    一条离线记录时，接收器必须能单独显示，否则插上接收器会看不到任何东西。
     """
-    ble_kinds = {device.kind for device in devices if device.connection == "ble"}
+    ble_kinds = {device.kind for device in devices
+                 if device.connection == "ble" and device.sample.online
+                 and device.sample.confirmed and device.sample.level is not None}
     if not ble_kinds:
         return list(devices)
     kept: List[Device] = []
     for device in devices:
         if device.connection == "usb" and device.kind in ble_kinds:
-            LOGGER.info("接收器通道与蓝牙 %s 同类别，合并为一张卡：%s",
+            LOGGER.info("接收器通道与在线蓝牙 %s 同类别，合并为一张卡：%s",
                         device.kind, device.name)
             continue
         kept.append(device)

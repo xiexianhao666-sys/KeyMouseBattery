@@ -62,6 +62,8 @@ class KeyboardSensor:
         self.backoff_until = 0.0
         self.backoff_index = 0
         self.last_ack = ""
+        # 接收器接口是否存在：存在但读不到电量时，仍然要出一张“电量暂不可用”的卡。
+        self.detected = False
 
     # ---- 设备层 ----
     def _open(self):
@@ -168,12 +170,17 @@ class KeyboardSensor:
                       raw_level=battery.raw_percent, sampled_at=time.time())
 
     def read(self) -> Sample:
+        """每次都用本次结果覆盖 self.last：UI 拿的是 device()，不能停在初始空样本上。"""
         now = time.monotonic()
-        if now < self.backoff_until:
-            return self._stale("退避中")
         if not self.enabled:
-            return self._stale("插件已关闭")
+            self.detected = False
+            self.last = self._stale("插件已关闭")
+            return self.last
+        if now < self.backoff_until:
+            self.last = self._stale("退避中")
+            return self.last
         probe = self.probe()
+        self.detected = probe.found
         if probe.sample.level is not None or probe.sample.charging is not None:
             self.last = probe.sample
             self.failures = 0
@@ -187,10 +194,16 @@ class KeyboardSensor:
             self.backoff_index += 1
             LOGGER.warning("键盘连续 %d 次失败，退避 %.0f 秒", self.failures, step)
             self.failures = 0
-        return self._stale(probe.error or "读取失败")
+        self.last = self._stale(probe.error or "读取失败")
+        return self.last
 
     def _stale(self, error: str) -> Sample:
         previous = self.last
+        if self.detected:
+            # 接收器还在：卡片保留，但电量如实显示为“暂不可用”，不拿旧读数冒充。
+            return Sample(level=None, charging=None, online=True,
+                          error=error or "接收器已连接，读不到电量",
+                          sampled_at=time.time())
         return Sample(level=previous.level, charging=previous.charging, online=False,
                       raw_level=previous.raw_level, error=error,
                       sampled_at=previous.sampled_at)

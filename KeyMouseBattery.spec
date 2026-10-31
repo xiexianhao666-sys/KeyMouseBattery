@@ -1,17 +1,15 @@
 # -*- mode: python ; coding: utf-8 -*-
 from PyInstaller.utils.hooks import collect_submodules
-from pathlib import Path
-root = Path(SPECPATH)
 
 hiddenimports = ['winrt.windows.foundation', 'winrt.windows.foundation.collections', 'winrt.windows.storage.streams', 'winrt.windows.devices.bluetooth', 'winrt.windows.devices.bluetooth.advertisement', 'winrt.windows.devices.bluetooth.genericattributeprofile', 'winrt.windows.devices.enumeration']
 hiddenimports += collect_submodules('keymousebattery')
 
 
 a = Analysis(
-    [str(root / 'KeyMouseBattery.pyw')],
-    pathex=[str(root)],
+    ['D:/GPT-DSH_cooperation/DSH/work/P002/KeyMouseBattery/KeyMouseBattery.pyw'],
+    pathex=['D:/GPT-DSH_cooperation/DSH/work/P002/KeyMouseBattery', 'D:/GPT-DSH_cooperation/DSH/work/P002/KeyMouseBattery'],
     binaries=[],
-    datas=[(str(root / 'assets'), 'assets')],
+    datas=[('D:/GPT-DSH_cooperation/DSH/work/P002/KeyMouseBattery/assets', 'assets')],
     hiddenimports=hiddenimports,
     hookspath=[],
     hooksconfig={},
@@ -38,8 +36,8 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    version=str(root / 'build/version_info.txt') if (root / 'build/version_info.txt').exists() else None,
-    icon=[str(root / 'assets/app.ico')],
+    version='D:/GPT-DSH_cooperation/DSH/work/P002/KeyMouseBattery/build/version_info.txt',
+    icon=['D:/GPT-DSH_cooperation/DSH/work/P002/KeyMouseBattery/assets/app.ico'],
 )
 coll = COLLECT(
     exe,
