@@ -42,13 +42,21 @@ KeyMouseBattery 是一款使用 Python / PySide6 开发的 Windows 电量工具�
 
 蓝牙设备需要在 Windows 中完成配对并连接，且电量服务可读。接收器适配取决于具体型号及协议，相同 USB ID 的设备也需要型号校验。
 
+## 快速开始
+
+**[下载最新便携包（Windows 64 位）](https://github.com/xiexianhao666-sys/KeyMouseBattery/releases/latest)** —— 不用装 Python，解压即用。
+
+1. 下载 `KeyMouseBattery-<版本>-win64.zip`。
+2. **整个文件夹一起解压**到可写位置（例如 `D:\Apps\KeyMouseBattery`），不要只把 exe 拖出来，程序依赖同目录的 `_internal`。
+3. 双击 `KeyMouseBattery.exe`。托盘出现电量图标即已启动：左键打开面板，右键打开菜单。
+
+首次运行时 Windows SmartScreen 可能提示「未知发布者」，因为程序没有代码签名；点「更多信息 → 仍要运行」即可。
+
+需要从源码运行或自行打包时：安装 `requirements.txt` 依赖后执行 `python KeyMouseBattery.pyw`；打包用 `./build.ps1 -Python python`，产物在 `dist/KeyMouseBattery`。依赖说明见 [CREDITS.md](CREDITS.md)。
+
 ## 使用方式
 
-仓库当前提供源码，版本为 `0.4.0-dev`，尚未发布可下载的 Release。构建入口为 `build.ps1`；安装 `requirements.txt` 中的依赖后，可运行 `python KeyMouseBattery.pyw`；打包使用 `./build.ps1 -Python python`。依赖说明见 [CREDITS.md](CREDITS.md)。
-
-已有便携构建包时：
-
-1. 解压到可写文件夹，运行 `KeyMouseBattery.exe`。
+1. 解压后运行 `KeyMouseBattery.exe`。
 2. 连接设备，在面板中查看电量；通过托盘图标打开面板或菜单。
 3. 在“设置”中调整显示、提醒和启动选项，点击“保存设置”应用。
 
@@ -62,11 +70,11 @@ KeyMouseBattery 是一款使用 Python / PySide6 开发的 Windows 电量工具�
 
 ## 开发状态
 
-当前版本的后续工作：
+`0.4.0-dev` 已发布便携包，后续工作：
 
-- 修复同类别 BLE 记录可能隐藏独立 USB 设备的问题。
-- 当前蓝牙候选枚举上限为 64 台。
-- 补充真实登录自启、高 DPI、多屏及任务栏深浅切换验证。
+- 补充真实登录自启、高 DPI、多屏及任务栏深浅切换的逐项验证。
+- 蓝牙候选枚举单轮上限为 8 台、候选池 64 台，设备特别多时按轮转补齐。
+- 扩展更多接收器与私有协议型号。
 
 便携程序目前未签名，Windows SmartScreen 可能显示未知发布者提示。版本记录见 [UPLOAD_STATUS.md](UPLOAD_STATUS.md)。
 
