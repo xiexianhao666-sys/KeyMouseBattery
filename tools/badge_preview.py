@@ -14,7 +14,7 @@ from PySide6.QtWidgets import QApplication  # noqa: E402
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from vigilwatt_py.ui import (  # noqa: E402
+from keymousebattery.ui import (  # noqa: E402
     BORDER,
     MUTED,
     TEXT,

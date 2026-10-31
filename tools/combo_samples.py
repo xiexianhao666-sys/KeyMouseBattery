@@ -19,7 +19,7 @@ from PySide6.QtGui import QColor, QImage, QPainter, QPen  # noqa: E402
 from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QHBoxLayout,  # noqa: E402
                                QLabel, QPushButton, QVBoxLayout, QWidget)
 
-from vigilwatt_py import ui  # noqa: E402
+from keymousebattery import ui  # noqa: E402
 
 POPUP_QSS = (
     "QComboBox QAbstractItemView { background: #ffffff; border: 1px solid #e1e7f0;"

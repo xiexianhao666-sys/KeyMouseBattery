@@ -15,7 +15,7 @@ from PySide6.QtWidgets import QApplication  # noqa: E402
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from vigilwatt_py.bar import DesktopBar  # noqa: E402
+from keymousebattery.bar import DesktopBar  # noqa: E402
 
 
 def main(argv: list[str]) -> int:

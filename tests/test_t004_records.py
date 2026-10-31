@@ -11,8 +11,8 @@ import unittest
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from tests.support import temp_dir  # noqa: E402
-from vigilwatt_py.model import Device, Sample  # noqa: E402
-from vigilwatt_py.records import RecordStore, kind_label  # noqa: E402
+from keymousebattery.model import Device, Sample  # noqa: E402
+from keymousebattery.records import RecordStore, kind_label  # noqa: E402
 
 
 def device(key: str, name: str, kind: str = "keyboard", online: bool = True,

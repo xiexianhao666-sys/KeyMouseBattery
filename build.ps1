@@ -1,5 +1,5 @@
 ﻿param(
-    [string]$Python = "E:\python\python.exe",
+    [string]$Python = "python",
     [switch]$SkipClean
 )
 
@@ -7,13 +7,16 @@ $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $root
 
-if (-not (Test-Path $Python)) { throw "Python not found: $Python" }
+if (-not (Get-Command $Python -ErrorAction SilentlyContinue)) { throw "Python not found: $Python" }
 
-$libRoot = Join-Path (Split-Path -Parent $root) "lib"
-$env:PYTHONPATH = $libRoot
+$libRoot = $root
 
 if (-not $SkipClean) {
-    Remove-Item build, dist -Recurse -Force -ErrorAction SilentlyContinue
+    foreach ($folder in @("build", "dist")) {
+        $target = [IO.Path]::GetFullPath((Join-Path $root $folder))
+        if ([IO.Path]::GetDirectoryName($target) -ne $root) { throw "Unsafe build path" }
+        if (Test-Path -LiteralPath $target) { Remove-Item -LiteralPath $target -Recurse -Force }
+    }
 }
 
 $versionFile = Join-Path $root "build\version_info.txt"
@@ -28,22 +31,22 @@ VSVersionInfo(
         StringStruct('CompanyName', ''),
         StringStruct('FileDescription', '\u952e\u9f20\u7535\u91cf'),
         StringStruct('FileVersion', '0.4.0'),
-        StringStruct('InternalName', 'VigilWattPy'),
-        StringStruct('OriginalFilename', 'VigilWattPy.exe'),
+        StringStruct('InternalName', 'KeyMouseBattery'),
+        StringStruct('OriginalFilename', 'KeyMouseBattery.exe'),
         StringStruct('ProductName', '\u952e\u9f20\u7535\u91cf'),
         StringStruct('ProductVersion', '0.4.0'),
-        StringStruct('LegalCopyright', 'MIT; upstream VigilWatt (c) evren')])]),
+        StringStruct('LegalCopyright', 'MIT; KeyMouseBattery contributors')])]),
     VarFileInfo([VarStruct('Translation', [0x0804, 1200])])])
 '@ | Set-Content -Path $versionFile -Encoding utf8
 
 $iconPath = Join-Path $root "assets\app.ico"
 $addData = "$(Join-Path $root 'assets');assets"
-$entry = Join-Path $root "VigilWattPy.pyw"
+$entry = Join-Path $root "KeyMouseBattery.pyw"
 $logPath = Join-Path $root "build.log"
 
 $argsList = @(
     "-m", "PyInstaller", "--noconfirm", "--clean", "--windowed",
-    "--name", "VigilWattPy",
+    "--name", "KeyMouseBattery",
     "--icon", $iconPath,
     "--version-file", $versionFile,
     "--add-data", $addData,
@@ -56,7 +59,7 @@ $argsList = @(
     "--hidden-import", "winrt.windows.devices.bluetooth.advertisement",
     "--hidden-import", "winrt.windows.devices.bluetooth.genericattributeprofile",
     "--hidden-import", "winrt.windows.devices.enumeration",
-    "--collect-submodules", "vigilwatt_py",
+    "--collect-submodules", "keymousebattery",
     $entry
 )
 
@@ -68,5 +71,5 @@ $ErrorActionPreference = $previous
 
 if ($code -ne 0) { throw "PyInstaller failed, see build.log" }
 
-$exe = Join-Path $root "dist\VigilWattPy\VigilWattPy.exe"
+$exe = Join-Path $root "dist\KeyMouseBattery\KeyMouseBattery.exe"
 "OK: $exe $((Get-Item $exe).Length) bytes"

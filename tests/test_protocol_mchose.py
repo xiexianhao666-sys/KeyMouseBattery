@@ -1,6 +1,6 @@
 import unittest
 
-from vigilwatt_py import protocol_mchose as proto
+from keymousebattery import protocol_mchose as proto
 
 
 def build(payload: bytes) -> bytes:

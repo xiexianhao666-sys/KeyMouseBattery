@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import unittest
 
-from vigilwatt_py.model import Device, Sample
-from vigilwatt_py.poller import merge_usb_channels, model_tokens
+from keymousebattery.model import Device, Sample
+from keymousebattery.poller import merge_usb_channels, model_tokens
 
 
 def device(key: str, name: str, kind: str, connection: str, online: bool,

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import unittest
 
-from vigilwatt_py import alerts
-from vigilwatt_py.model import Device, Sample
+from keymousebattery import alerts
+from keymousebattery.model import Device, Sample
 
 NOW = 1_000_000.0
 

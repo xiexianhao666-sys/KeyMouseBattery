@@ -20,9 +20,9 @@ def _console_utf8() -> None:
 
 def version() -> List[str]:
     return [
-        "%s %s（非官方 Python 移植）" % (identity.APP_NAME, identity.APP_VERSION),
-        "上游 %s %s，提交 %s，许可 %s" % (identity.UPSTREAM_TAG, identity.UPSTREAM_URL,
-                                          identity.UPSTREAM_COMMIT, identity.UPSTREAM_LICENSE),
+        "%s · %s %s" % (identity.APP_ID, identity.APP_NAME, identity.APP_VERSION),
+        identity.APP_DESCRIPTION,
+        identity.PROJECT_URL,
         "解释器 %s" % sys.version.split()[0],
     ]
 
@@ -31,7 +31,7 @@ def probe() -> List[str]:
     from .ble_watcher import BleSensor
     from .mchose_plugin import KeyboardSensor
 
-    lines = ["probe: VigilWattPy %s" % identity.APP_VERSION]
+    lines = ["probe: KeyMouseBattery %s" % identity.APP_VERSION]
     sensors = (
         ("ble-keyboard", BleSensor("keyboard", "MCHOSE", "蓝牙键盘")),
         ("ble-mouse", BleSensor("mouse", "ELECOM", "蓝牙鼠标")),

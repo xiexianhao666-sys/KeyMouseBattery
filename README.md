@@ -2,7 +2,7 @@
 
 在设备面板、系统托盘和桌面电量条中，随时查看无线键鼠的剩余电量。
 
-KeyMouseBattery 是一款使用 Python / PySide6 开发的 Windows 电量工具，参考 [VigilWatt](https://github.com/evren-oct/vigil-watt) 实现。界面采用灰白配色，支持多设备记录、连接排序、低电量提醒与开机启动设置。
+KeyMouseBattery 是一款使用 Python / PySide6 开发的 Windows 电量工具。界面采用灰白配色，支持多设备记录、连接排序、低电量提醒与开机启动设置。
 
 ## 功能预览
 
@@ -44,11 +44,11 @@ KeyMouseBattery 是一款使用 Python / PySide6 开发的 Windows 电量工具�
 
 ## 使用方式
 
-仓库当前提供源码，版本为 `0.4.0-dev`，尚未发布可下载的 Release。构建入口为 `build.ps1`；脚本与 `.spec` 仍使用原开发环境路径，构建前需调整 Python 和依赖目录。依赖说明见 [CREDITS.md](CREDITS.md)。
+仓库当前提供源码，版本为 `0.4.0-dev`，尚未发布可下载的 Release。构建入口为 `build.ps1`；安装 `requirements.txt` 中的依赖后，可运行 `python KeyMouseBattery.pyw`；打包使用 `./build.ps1 -Python python`。依赖说明见 [CREDITS.md](CREDITS.md)。
 
 已有便携构建包时：
 
-1. 解压到可写文件夹，运行 `VigilWattPy.exe`。
+1. 解压到可写文件夹，运行 `KeyMouseBattery.exe`。
 2. 连接设备，在面板中查看电量；通过托盘图标打开面板或菜单。
 3. 在“设置”中调整显示、提醒和启动选项，点击“保存设置”应用。
 
@@ -65,7 +65,7 @@ KeyMouseBattery 是一款使用 Python / PySide6 开发的 Windows 电量工具�
 当前版本的后续工作：
 
 - 修复同类别 BLE 记录可能隐藏独立 USB 设备的问题。
-- 完善通用构建配置；当前蓝牙候选枚举上限为 64 台。
+- 当前蓝牙候选枚举上限为 64 台。
 - 补充真实登录自启、高 DPI、多屏及任务栏深浅切换验证。
 
 便携程序目前未签名，Windows SmartScreen 可能显示未知发布者提示。版本记录见 [UPLOAD_STATUS.md](UPLOAD_STATUS.md)。
@@ -78,12 +78,16 @@ KeyMouseBattery 是一款使用 Python / PySide6 开发的 Windows 电量工具�
 
 ## 数据与卸载
 
-配置、设备记录和日志保存在程序目录的 `data/` 中。开机启动使用当前用户的 `Run/VigilWattPy` 注册项。
+配置、设备记录和日志保存在程序目录的 `data/` 中。开机启动使用当前用户的 `Run/KeyMouseBattery` 注册项。
 
 卸载前在设置中关闭开机启动并保存，然后退出程序、删除程序文件夹即可。
 
-## 来源与许可
+## 许可与致谢
 
-本项目是 VigilWatt 的非官方 Python 实现，参考其公开文档中的协议说明与界面思路。参考版本为 `v1.3.1`，提交 `4df830043296760f5d5c273f4cdc0ea9456c4bc7`。
+KeyMouseBattery 是独立维护的 Python / PySide6 项目，采用 MIT 许可证。第三方依赖、图标许可及早期协议参考资料见 [CREDITS.md](CREDITS.md)，版权与许可文本见 [LICENSE](LICENSE)。
 
-项目采用 MIT 许可证；上游 Copyright (c) 2026 evren。Lucide 图标采用 ISC 许可证，其他依赖与素材来源见 [CREDITS.md](CREDITS.md)，完整许可见 [LICENSE](LICENSE)。
+## 从旧开发版升级
+
+旧开发版使用 `VigilWattPy` 名称。先在旧版设置中关闭开机启动并保存，再退出旧版；新版启动后重新开启自启动。新版使用独立的 `KeyMouseBattery` 注册项与单实例标识，不会自动删除旧版注册项。
+
+配置与设备记录仍使用 `data/config.json`、`data/devices.json`；需要保留时，在两个程序都退出后复制到新版目录。新日志名称为 `keymousebattery.log`。应用入口与构建产物改为 `KeyMouseBattery.pyw` 和 `KeyMouseBattery.exe`。

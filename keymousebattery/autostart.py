@@ -17,7 +17,7 @@ from typing import Any, Dict, Optional, Tuple
 from . import identity
 
 RUN_KEY = r"Software\Microsoft\Windows\CurrentVersion\Run"
-VALUE_NAME = "VigilWattPy"
+VALUE_NAME = "KeyMouseBattery"
 BACKGROUND_FLAG = "--background"
 
 

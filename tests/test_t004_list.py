@@ -10,9 +10,9 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtWidgets import QApplication  # noqa: E402
 
-from vigilwatt_py.model import Device, Sample  # noqa: E402
-from vigilwatt_py.tray import IDLE_KEY, TrayIcons  # noqa: E402
-from vigilwatt_py.ui import DeviceListPanel  # noqa: E402
+from keymousebattery.model import Device, Sample  # noqa: E402
+from keymousebattery.tray import IDLE_KEY, TrayIcons  # noqa: E402
+from keymousebattery.ui import DeviceListPanel  # noqa: E402
 
 APP = QApplication.instance() or QApplication([])
 

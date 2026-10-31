@@ -18,10 +18,10 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from tests.support import temp_dir  # noqa: E402
 
-from vigilwatt_py import app as app_mod  # noqa: E402
-from vigilwatt_py import autostart, config  # noqa: E402
+from keymousebattery import app as app_mod  # noqa: E402
+from keymousebattery import autostart, config  # noqa: E402
 
-OLD_COMMAND = '"C:\\old\\VigilWattPy.exe" --background'
+OLD_COMMAND = '"C:\\old\\KeyMouseBattery.exe" --background'
 
 
 class _Registry(autostart.Registry):

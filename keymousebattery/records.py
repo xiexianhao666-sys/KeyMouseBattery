@@ -17,7 +17,7 @@ from typing import Dict, Iterable, List, Optional
 
 from .model import CONNECTION_LABELS, Device, Sample
 
-LOGGER = logging.getLogger("vigilwatt.records")
+LOGGER = logging.getLogger("keymousebattery.records")
 
 VERSION = 1
 KIND_LABELS = {"keyboard": "键盘", "mouse": "鼠标", "headset": "耳机",

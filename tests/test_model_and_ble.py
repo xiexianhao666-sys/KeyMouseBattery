@@ -1,7 +1,7 @@
 import unittest
 
-from vigilwatt_py import ble_watcher as ble
-from vigilwatt_py.model import Device, Sample
+from keymousebattery import ble_watcher as ble
+from keymousebattery.model import Device, Sample
 
 
 class PropsMap:

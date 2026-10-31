@@ -7,7 +7,7 @@ import sys
 from PySide6.QtCore import QRectF, Qt
 from PySide6.QtGui import QColor, QFont, QGuiApplication, QImage, QPainter, QPen
 
-from vigilwatt_py import icons
+from keymousebattery import icons
 
 DEVICE_CANDIDATES = [
     ("monitor-smartphone", "设备（多屏+手机）"),

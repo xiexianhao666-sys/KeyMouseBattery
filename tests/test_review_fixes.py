@@ -14,10 +14,10 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from tests.support import temp_dir  # noqa: E402
 
-from vigilwatt_py import app as app_mod  # noqa: E402
-from vigilwatt_py import autostart, config  # noqa: E402
-from vigilwatt_py.bar import DesktopBar, clamp_to_screens  # noqa: E402
-from vigilwatt_py.model import Device, Sample  # noqa: E402
+from keymousebattery import app as app_mod  # noqa: E402
+from keymousebattery import autostart, config  # noqa: E402
+from keymousebattery.bar import DesktopBar, clamp_to_screens  # noqa: E402
+from keymousebattery.model import Device, Sample  # noqa: E402
 
 
 def _now() -> float:
@@ -113,7 +113,7 @@ class TrayMenuTests(unittest.TestCase):
 
     def test_each_icon_has_bound_context_menu(self):
         _qt_app()
-        from vigilwatt_py.tray import TrayIcons
+        from keymousebattery.tray import TrayIcons
 
         calls = []
         tray = TrayIcons(lambda: calls.append("open"), lambda: calls.append("refresh"),
@@ -146,7 +146,7 @@ class TrayMenuTests(unittest.TestCase):
 
     def test_menu_action_invokes_open_panel(self):
         _qt_app()
-        from vigilwatt_py.tray import TrayIcons
+        from keymousebattery.tray import TrayIcons
 
         calls = []
         tray = TrayIcons(lambda: calls.append("open"), lambda: None, lambda _v: None,
@@ -263,7 +263,7 @@ class ApplySettingsTests(unittest.TestCase):
 
     def test_rewrites_existing_value_when_program_moved(self):
         registry = _FakeRegistry()
-        registry.values[autostart.VALUE_NAME] = '"C:\\old\\VigilWattPy.exe" --background'
+        registry.values[autostart.VALUE_NAME] = '"C:\\old\\KeyMouseBattery.exe" --background'
         autostart.set_backend(registry)
         original_frozen = autostart.identity.is_frozen
         autostart.identity.is_frozen = lambda: True
@@ -298,7 +298,7 @@ class ApplySettingsTests(unittest.TestCase):
 
     def test_disabling_removes_only_our_value(self):
         registry = _FakeRegistry()
-        registry.values[autostart.VALUE_NAME] = '"C:\\x\\VigilWattPy.exe" --background'
+        registry.values[autostart.VALUE_NAME] = '"C:\\x\\KeyMouseBattery.exe" --background'
         registry.values["OtherApp"] = "other.exe"
         autostart.set_backend(registry)
         self.app.cfg["autostart"] = True
@@ -314,7 +314,7 @@ class SingleInstanceTests(unittest.TestCase):
 
     def test_acquire_release_cycle(self):
         original_name = app_mod.identity.MUTEX_NAME
-        app_mod.identity.MUTEX_NAME = "Local\\VigilWattPy_test_single_instance"
+        app_mod.identity.MUTEX_NAME = "Local\\KeyMouseBattery_test_single_instance"
         try:
             self.assertTrue(app_mod.acquire_single_instance())
             self.assertFalse(app_mod.acquire_single_instance())
@@ -326,7 +326,7 @@ class SingleInstanceTests(unittest.TestCase):
 
     def test_signal_without_existing_event_is_false(self):
         original = app_mod.identity.SHOW_EVENT_NAME
-        app_mod.identity.SHOW_EVENT_NAME = "Local\\VigilWattPy_test_show_%d" % os.getpid()
+        app_mod.identity.SHOW_EVENT_NAME = "Local\\KeyMouseBattery_test_show_%d" % os.getpid()
         try:
             self.assertFalse(app_mod.signal_show_event())
         finally:

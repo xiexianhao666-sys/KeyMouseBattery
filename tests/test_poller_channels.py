@@ -5,10 +5,10 @@ from __future__ import annotations
 import time
 import unittest
 
-from vigilwatt_py import ble_watcher
-from vigilwatt_py.ble_watcher import BleReading, BleSensor, ScanResult, rotation_indices
-from vigilwatt_py.poller import DONGLE_KEY, Collector
-from vigilwatt_py.model import Device, Sample
+from keymousebattery import ble_watcher
+from keymousebattery.ble_watcher import BleReading, BleSensor, ScanResult, rotation_indices
+from keymousebattery.poller import DONGLE_KEY, Collector
+from keymousebattery.model import Device, Sample
 
 
 class FakeBle:
@@ -133,7 +133,7 @@ class DongleIndependenceTests(unittest.TestCase):
     """R3：蓝牙鼠标在线时，USB 键盘仍要被查询。"""
 
     def test_dongle_polled_even_when_ble_online(self) -> None:
-        from vigilwatt_py import poller as poller_module
+        from keymousebattery import poller as poller_module
 
         class FakeSensor:
             def __init__(self):

@@ -21,8 +21,8 @@ from PySide6.QtGui import QImage  # noqa: E402
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QPushButton,  # noqa: E402
                                QVBoxLayout, QWidget)
 
-from vigilwatt_py import ui  # noqa: E402
-from vigilwatt_py.model import Device, Sample  # noqa: E402
+from keymousebattery import ui  # noqa: E402
+from keymousebattery.model import Device, Sample  # noqa: E402
 
 STEPS = (76, 18, 0)
 

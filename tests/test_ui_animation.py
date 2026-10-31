@@ -15,8 +15,8 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from PySide6.QtCore import QVariantAnimation  # noqa: E402
 from PySide6.QtWidgets import QApplication  # noqa: E402
 
-from vigilwatt_py import ui  # noqa: E402
-from vigilwatt_py.model import Device, Sample  # noqa: E402
+from keymousebattery import ui  # noqa: E402
+from keymousebattery.model import Device, Sample  # noqa: E402
 
 
 def _app():

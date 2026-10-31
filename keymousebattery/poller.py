@@ -15,7 +15,7 @@ from .ble_watcher import BleScanner, BleReading, ScanResult, infer_kind, reading
 from .mchose_plugin import KeyboardSensor
 from .model import Device, Sample
 
-LOGGER = logging.getLogger("vigilwatt.poller")
+LOGGER = logging.getLogger("keymousebattery.poller")
 
 DONGLE_KEY = "usb:compx-receiver"
 MISS_LIMIT = 2

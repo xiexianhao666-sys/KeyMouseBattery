@@ -11,7 +11,7 @@ from PySide6.QtWidgets import QApplication
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from vigilwatt_py.bar import DesktopBar  # noqa: E402
+from keymousebattery.bar import DesktopBar  # noqa: E402
 
 
 BANDS = (("浅色任务栏", QColor(243, 243, 243), True),

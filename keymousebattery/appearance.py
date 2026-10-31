@@ -10,7 +10,7 @@ from __future__ import annotations
 import logging
 import sys
 
-LOG = logging.getLogger("vigilwatt")
+LOG = logging.getLogger("keymousebattery")
 
 DWMWA_BORDER_COLOR = 34
 DWMWA_CAPTION_COLOR = 35

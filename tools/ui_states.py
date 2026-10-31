@@ -17,8 +17,8 @@ from PySide6.QtCore import Qt  # noqa: E402
 from PySide6.QtGui import QPainter, QColor, QFont  # noqa: E402
 from PySide6.QtWidgets import QApplication  # noqa: E402
 
-from vigilwatt_py.model import Device, Sample  # noqa: E402
-from vigilwatt_py.ui import MainWindow  # noqa: E402
+from keymousebattery.model import Device, Sample  # noqa: E402
+from keymousebattery.ui import MainWindow  # noqa: E402
 
 
 def device(key, name, kind, level, online=True, stale=False, charging=None, age=5.0):

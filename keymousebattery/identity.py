@@ -7,22 +7,19 @@ import sys
 import tempfile
 from pathlib import Path
 
-APP_ID = "VigilWattPy"
+APP_ID = "KeyMouseBattery"
 APP_NAME = "键鼠电量"
 APP_TAGLINE = "电量一目了然"
 APP_VERSION = "0.4.0-dev"
-APP_DESCRIPTION = "基于 VigilWatt 的非官方 Python 版本"
+APP_DESCRIPTION = "Windows 无线键鼠电量工具"
 
-MUTEX_NAME = "Local\\VigilWattPy_single_instance"
-SHOW_EVENT_NAME = "Local\\VigilWattPy_show_panel"
-UPSTREAM_URL = "https://github.com/evren-oct/vigil-watt"
-UPSTREAM_TAG = "v1.3.1"
-UPSTREAM_COMMIT = "4df830043296760f5d5c273f4cdc0ea9456c4bc7"
-UPSTREAM_LICENSE = "MIT (Copyright (c) 2026 evren)"
+MUTEX_NAME = "Local\\KeyMouseBattery_single_instance"
+SHOW_EVENT_NAME = "Local\\KeyMouseBattery_show_panel"
+PROJECT_URL = "https://github.com/xiexianhao666-sys/KeyMouseBattery"
 PORTABLE_MARKER = "portable.txt"
 
 CONFIG_FILE = "config.json"
-LOG_FILE = "vigilwatt.log"
+LOG_FILE = "keymousebattery.log"
 
 
 def is_frozen() -> bool:
@@ -93,7 +90,7 @@ def describe_paths(base: Path | None = None) -> dict[str, str]:
 def command_line() -> list[str]:
     if is_frozen():
         return [str(Path(sys.executable).resolve())]
-    script = base_dir() / "VigilWattPy.pyw"
+    script = base_dir() / "KeyMouseBattery.pyw"
     return [sys.executable, str(script)]
 
 

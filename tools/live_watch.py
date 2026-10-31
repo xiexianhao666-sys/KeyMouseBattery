@@ -9,7 +9,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from vigilwatt_py import mchose_plugin  # noqa: E402
+from keymousebattery import mchose_plugin  # noqa: E402
 
 
 def main(argv: list[str] | None = None) -> int:

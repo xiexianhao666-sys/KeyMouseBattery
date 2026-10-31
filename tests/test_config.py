@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from vigilwatt_py import config
+from keymousebattery import config
 from tests.support import cleanup, temp_dir
 
 

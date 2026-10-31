@@ -1,13 +1,13 @@
 # 来源与致谢
 
-## 上游
+## 早期协议参考资料
 
 - VigilWatt `v1.3.1`：https://github.com/evren-oct/vigil-watt
 - tag `v1.3.1`，commit `4df830043296760f5d5c273f4cdc0ea9456c4bc7`
 - 许可：MIT，Copyright (c) 2026 evren
-- 本移植只参考其公开文档与可观察行为，未复制其 C# 源码；界面为独立 Python 实现
+- 早期开发参考其公开协议文档与可观察行为；当前项目独立维护，未复制其 C# 源码
 
-参考的上游文档（只读，位于 `GPT\references\VigilWatt-v1.3.1`）：
+参考文档（VigilWatt v1.3.1）：
 
 - `docs/hardware/mchose.md`：迈从 G75 Pro 接收器接口、20 字节 `0x13` 帧、会话/查询/推送报文与型号密码表
 - `docs/hardware/aula.md`：同一指纹被 AULA 机型共用的事实，用于说明为什么必须核对 ACK 密码

@@ -26,7 +26,7 @@ from .model import Device
 from .poller import Collector, merge_usb_channels
 from .tray import TrayIcons
 
-LOGGER = logging.getLogger("vigilwatt.app")
+LOGGER = logging.getLogger("keymousebattery.app")
 TICK_MS = 1000
 SHOW_POLL_MS = 500
 REFRESH_FEEDBACK_SECONDS = 90.0

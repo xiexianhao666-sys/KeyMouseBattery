@@ -8,7 +8,7 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from vigilwatt_py import autostart, config
+from keymousebattery import autostart, config
 from tests.support import temp_dir, cleanup
 
 
@@ -36,7 +36,7 @@ class MigrationTests(unittest.TestCase):
 
     def test_write_failure_is_reported(self) -> None:
         cfg = dict(config.DEFAULTS)
-        with mock.patch("vigilwatt_py.config.os.replace", side_effect=OSError("拒绝访问")):
+        with mock.patch("keymousebattery.config.os.replace", side_effect=OSError("拒绝访问")):
             ok, message = config.write_atomic(self.path, cfg)
         self.assertFalse(ok)
         self.assertIn("拒绝访问", message)
@@ -74,7 +74,7 @@ class AutostartTests(unittest.TestCase):
     def setUp(self) -> None:
         self.registry = FakeRegistry()
         autostart.set_backend(self.registry)
-        self._frozen = mock.patch("vigilwatt_py.autostart.identity.is_frozen", return_value=True)
+        self._frozen = mock.patch("keymousebattery.autostart.identity.is_frozen", return_value=True)
         self._frozen.start()
 
     def tearDown(self) -> None:
@@ -82,27 +82,27 @@ class AutostartTests(unittest.TestCase):
         autostart.set_backend(None)
 
     def test_target_command_is_quoted_and_has_flag(self) -> None:
-        command = autostart.target_command(r"C:\Program Files\VigilWattPy\VigilWattPy.exe")
-        self.assertTrue(command.startswith('"C:\\Program Files\\VigilWattPy\\VigilWattPy.exe"'))
+        command = autostart.target_command(r"C:\Program Files\KeyMouseBattery\KeyMouseBattery.exe")
+        self.assertTrue(command.startswith('"C:\\Program Files\\KeyMouseBattery\\KeyMouseBattery.exe"'))
         self.assertTrue(command.endswith("--background"))
 
     def test_enable_writes_registration(self) -> None:
-        ok, note = autostart.enable(exe=r"D:\apps\demo\VigilWattPy.exe")
+        ok, note = autostart.enable(exe=r"D:\apps\demo\KeyMouseBattery.exe")
         self.assertTrue(ok, note)
         self.assertEqual(self.registry.values[autostart.VALUE_NAME],
-                         '"D:\\apps\\demo\\VigilWattPy.exe" --background')
+                         '"D:\\apps\\demo\\KeyMouseBattery.exe" --background')
 
     def test_disable_only_removes_own_value(self) -> None:
         self.registry.values["Other"] = "keep me"
-        autostart.enable(exe=r"D:\apps\demo\VigilWattPy.exe")
+        autostart.enable(exe=r"D:\apps\demo\KeyMouseBattery.exe")
         ok, _note = autostart.disable()
         self.assertTrue(ok)
         self.assertNotIn(autostart.VALUE_NAME, self.registry.values)
         self.assertEqual(self.registry.values["Other"], "keep me")
 
     def test_read_state_reports_moved_program(self) -> None:
-        self.registry.values[autostart.VALUE_NAME] = '"D:\\old\\VigilWattPy.exe" --background'
-        ok, raw, note = autostart.read_state(exe=r"D:\new\VigilWattPy.exe")
+        self.registry.values[autostart.VALUE_NAME] = '"D:\\old\\KeyMouseBattery.exe" --background'
+        ok, raw, note = autostart.read_state(exe=r"D:\new\KeyMouseBattery.exe")
         self.assertFalse(ok)
         self.assertIn("其它位置", note)
         self.assertIn("old", raw)
@@ -111,12 +111,12 @@ class AutostartTests(unittest.TestCase):
         registry = FakeRegistry()
         autostart.set_backend(registry)
         with mock.patch.object(registry, "set", lambda name, value: None):
-            ok, note = autostart.enable(exe=r"D:\apps\demo\VigilWattPy.exe")
+            ok, note = autostart.enable(exe=r"D:\apps\demo\KeyMouseBattery.exe")
         self.assertFalse(ok)
         self.assertIn("校验失败", note)
 
     def test_source_run_is_unsupported(self) -> None:
-        with mock.patch("vigilwatt_py.autostart.identity.is_frozen", return_value=False):
+        with mock.patch("keymousebattery.autostart.identity.is_frozen", return_value=False):
             self.assertFalse(autostart.is_supported())
 
 

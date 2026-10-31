@@ -22,8 +22,8 @@ from PySide6.QtCore import Qt, QTimer  # noqa: E402
 from PySide6.QtGui import QColor, QFont, QImage, QPainter  # noqa: E402
 from PySide6.QtWidgets import QApplication  # noqa: E402
 
-from vigilwatt_py.model import Device, Sample  # noqa: E402
-from vigilwatt_py.ui import MainWindow  # noqa: E402
+from keymousebattery.model import Device, Sample  # noqa: E402
+from keymousebattery.ui import MainWindow  # noqa: E402
 
 
 def make_device(key: str, name: str, kind: str, level: int | None, online: bool,

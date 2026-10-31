@@ -1,15 +1,17 @@
 # -*- mode: python ; coding: utf-8 -*-
 from PyInstaller.utils.hooks import collect_submodules
+from pathlib import Path
+root = Path(SPECPATH)
 
 hiddenimports = ['winrt.windows.foundation', 'winrt.windows.foundation.collections', 'winrt.windows.storage.streams', 'winrt.windows.devices.bluetooth', 'winrt.windows.devices.bluetooth.advertisement', 'winrt.windows.devices.bluetooth.genericattributeprofile', 'winrt.windows.devices.enumeration']
-hiddenimports += collect_submodules('vigilwatt_py')
+hiddenimports += collect_submodules('keymousebattery')
 
 
 a = Analysis(
-    ['D:/GPT-DSH_cooperation/DSH/work/P002/VigilWattPy/VigilWattPy.pyw'],
-    pathex=['D:/GPT-DSH_cooperation/DSH/work/P002/lib', 'D:/GPT-DSH_cooperation/DSH/work/P002/VigilWattPy'],
+    [str(root / 'KeyMouseBattery.pyw')],
+    pathex=[str(root)],
     binaries=[],
-    datas=[('D:/GPT-DSH_cooperation/DSH/work/P002/VigilWattPy/assets', 'assets')],
+    datas=[(str(root / 'assets'), 'assets')],
     hiddenimports=hiddenimports,
     hookspath=[],
     hooksconfig={},
@@ -25,7 +27,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='VigilWattPy',
+    name='KeyMouseBattery',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -36,8 +38,8 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    version='D:/GPT-DSH_cooperation/DSH/work/P002/VigilWattPy/build/version_info.txt',
-    icon=['D:/GPT-DSH_cooperation/DSH/work/P002/VigilWattPy/assets/app.ico'],
+    version=str(root / 'build/version_info.txt') if (root / 'build/version_info.txt').exists() else None,
+    icon=[str(root / 'assets/app.ico')],
 )
 coll = COLLECT(
     exe,
@@ -46,5 +48,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='VigilWattPy',
+    name='KeyMouseBattery',
 )
