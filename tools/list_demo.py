@@ -45,6 +45,15 @@ def initial() -> list[Device]:
     ]
 
 
+def pair() -> list[Device]:
+    """一张在线 + 一张离线，用来核对离线卡没有残留电量条。"""
+    now = time.time()
+    return [
+        make_device("ble:11", "ELECOM EX-G", "mouse", 100, True, 2, now),
+        make_device("ble:12", "MCHOSE G75 5.0", "keyboard", None, False, 0, now - 120),
+    ]
+
+
 def tag(pixmap, text: str = "示例数据"):
     painter = QPainter(pixmap)
     painter.setRenderHint(QPainter.Antialiasing, True)
@@ -149,10 +158,11 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--live", action="store_true")
     parser.add_argument("--page", choices=("devices", "settings"), default="devices")
     parser.add_argument("--empty", action="store_true", help="渲染空状态（无设备记录）")
+    parser.add_argument("--pair", action="store_true", help="只渲染一张在线卡与一张离线卡")
     args = parser.parse_args(argv[1:])
     app = QApplication.instance() or QApplication([])
     window = build_window()
-    devices = [] if args.empty else initial()
+    devices = [] if args.empty else (pair() if args.pair else initial())
     window.render_devices(devices, 60, 20, time.time())
     if args.page == "settings":
         window.show_page(1)

@@ -44,6 +44,8 @@ class Device:
     # 设备记录：最近一次真实连接的时间与连接序号，用于排序（新连接置顶）。
     last_connected: Optional[float] = None
     order: int = 0
+    # 用户自定义名称；空表示用采集到的原始名称。
+    alias: str = ""
 
     @property
     def online(self) -> bool:

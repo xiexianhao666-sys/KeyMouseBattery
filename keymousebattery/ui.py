@@ -16,7 +16,9 @@ from PySide6.QtCore import (
 from PySide6.QtGui import (QColor, QFont, QGuiApplication, QIcon, QPainter, QPen, QPixmap,
                            QPolygonF)
 from PySide6.QtSvg import QSvgRenderer
-from PySide6.QtWidgets import (QAbstractButton, QCheckBox, QComboBox, QFrame, QGraphicsOpacityEffect,
+from PySide6.QtWidgets import (
+    QInputDialog,
+    QMenu,QAbstractButton, QCheckBox, QComboBox, QFrame, QGraphicsOpacityEffect,
                                QHBoxLayout, QLabel, QPushButton, QScrollArea, QSizePolicy,
                                QStackedWidget, QVBoxLayout, QWidget)
 
@@ -369,11 +371,18 @@ class DeviceCard(QFrame):
     """设备卡：读数变化时做 650ms 收起动画，只影响展示，不改 Sample。"""
 
     ANIM_MS = 650
+    rename_requested = Signal(str)
+    reset_requested = Signal(str)
 
     def __init__(self) -> None:
         super().__init__()
         self.setObjectName("card")
         self._offline = False
+        self._device_key = ""
+        self._alias = ""
+        # 右键菜单：重命名 / 恢复默认名称（0.4.2 起）
+        self.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.customContextMenuRequested.connect(self._context_menu)
         self.setStyleSheet(
                            "QFrame#card { background: %s; border: 1px solid %s; border-radius: 14px; }" % (CARD, BORDER))
         layout = QVBoxLayout(self)
@@ -434,6 +443,19 @@ class DeviceCard(QFrame):
         self.kind_mark.setToolTip({"keyboard": "键盘", "mouse": "鼠标", "headset": "耳机",
                                    "gamepad": "手柄"}.get(self._kind, "设备类型未知"))
 
+    def _context_menu(self, pos) -> None:
+        if not self._device_key:
+            return
+        menu = QMenu(self)
+        rename = menu.addAction("重命名…")
+        reset = menu.addAction("恢复默认名称")
+        reset.setEnabled(bool(self._alias))
+        chosen = menu.exec(self.mapToGlobal(pos))
+        if chosen is rename:
+            self.rename_requested.emit(self._device_key)
+        elif chosen is reset:
+            self.reset_requested.emit(self._device_key)
+
     def _set_offline_look(self, offline: bool) -> None:
         self._offline = bool(offline)
         background = OFFLINE_CARD if offline else CARD
@@ -464,8 +486,14 @@ class DeviceCard(QFrame):
             self._fraction = level / 100.0
         self.update()
 
+    def _bar_visible(self) -> bool:
+        """离线卡不要画电量条：bar_slot 被 hide() 后 geometry 仍在，不能只看 rect。"""
+        return not self._offline and not self.bar_slot.isHidden()
+
     def paintEvent(self, event) -> None:  # noqa: N802 - Qt 命名
         super().paintEvent(event)
+        if not self._bar_visible():
+            return
         rect = QRectF(self.bar_slot.geometry())
         if rect.width() <= 0 or rect.height() <= 0:
             return
@@ -542,6 +570,8 @@ class DeviceCard(QFrame):
             self._animate_to(None, visible=False)
             return
         sample = device.sample
+        self._device_key = device.key
+        self._alias = getattr(device, "alias", "") or ""
         self.name.setText(device.name)
         self.badge.set_connection(device.connection, device.connection_text)
         self._set_kind(device.kind, sample.online and getattr(sample, "confirmed", True))
@@ -601,6 +631,8 @@ class DeviceCard(QFrame):
 
     def show_offline(self, device: Device, now: Optional[float] = None) -> None:
         """断开后保留记录：隐藏百分比与电量条，只说明"未连接"和上次连接时间。"""
+        self._device_key = device.key
+        self._alias = getattr(device, "alias", "") or ""
         self.name.setText(device.name)
         self._set_kind(device.kind, False)
         self._set_offline_look(True)
@@ -621,8 +653,9 @@ class DeviceCard(QFrame):
     def set_highlight(self, on: bool, colour: str = HIGHLIGHT) -> None:
         """最新连接置顶时的短暂强调：只改描边，不改变尺寸，避免影响布局动画。"""
         border = colour if on else BORDER
+        background = OFFLINE_CARD if self._offline else CARD
         self.setStyleSheet("QFrame#card { background: %s; border: 1px solid %s; border-radius: 14px; }"
-                           % (CARD, border))
+                           % (background, border))
 
     def _set_bar(self, level: Optional[int], colour: str) -> None:
         self._colour = colour
@@ -675,6 +708,8 @@ def updated_text(device: Device, now: float) -> str:
 
 
 class DeviceListPanel(QWidget):
+    rename_requested = Signal(str)
+    reset_requested = Signal(str)
     """动态设备列表：记录几张卡就有几张卡，连接插入、断开下移、重连置顶。
 
     Qt 的 layout 与几何动画会互相争夺，所以这里不用 QVBoxLayout 排卡片，
@@ -760,6 +795,8 @@ class DeviceListPanel(QWidget):
                 card = DeviceCard()
                 card.setParent(self.canvas)
                 card.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+                card.rename_requested.connect(self.rename_requested)
+                card.reset_requested.connect(self.reset_requested)
                 card.show()
                 self._cards[device.key] = card
             card.update_view(device, low, now)

@@ -40,6 +40,8 @@ class Record:
     last_connected: Optional[float] = None
     last_level: Optional[int] = None
     last_seen: Optional[float] = None
+    # 用户自己起的名字；为空表示沿用采集到的原始名称。
+    alias: str = ""
 
     def to_json(self) -> Dict[str, object]:
         return {
@@ -51,6 +53,7 @@ class Record:
             "last_connected": self.last_connected,
             "last_level": self.last_level,
             "last_seen": self.last_seen,
+            "alias": self.alias,
         }
 
     @classmethod
@@ -84,17 +87,24 @@ class Record:
             last_connected=_num(raw.get("last_connected")),
             last_level=level,
             last_seen=_num(raw.get("last_seen")),
+            alias=str(raw.get("alias") or "").strip()[:40],
         )
 
+    def display_name(self, fallback: str = "") -> str:
+        """用户起的名字优先；否则用采集到的名称。"""
+        return self.alias or self.name or fallback
+
     def offline_device(self) -> Device:
-        return Device(key=self.key, name=self.name, kind=self.kind,
+        return Device(key=self.key, name=self.display_name(self.key), kind=self.kind,
                       connection=self.connection, source="record",
                       sample=Sample(level=None, charging=None, online=False),
-                      stale=False, last_connected=self.last_connected, order=self.order)
+                      stale=False, last_connected=self.last_connected, order=self.order,
+                      alias=self.alias)
 
     def live_device(self, device: Device) -> Device:
-        return dataclasses.replace(device, last_connected=self.last_connected,
-                                   order=self.order)
+        return dataclasses.replace(device, name=self.display_name(device.name),
+                                   last_connected=self.last_connected,
+                                   order=self.order, alias=self.alias)
 
 
 class RecordStore:
@@ -208,6 +218,17 @@ class RecordStore:
                 record.last_seen = None
                 changed = True
         return changed
+
+    def rename(self, key: str, alias: str) -> bool:
+        """给设备起名（空字符串＝恢复默认）；返回是否发生了改动。"""
+        record = self.records.get(key)
+        if record is None:
+            return False
+        clean = (alias or "").strip()[:40]
+        if record.alias == clean:
+            return False
+        record.alias = clean
+        return True
 
     # ---------- 排序视图 ----------
     @staticmethod

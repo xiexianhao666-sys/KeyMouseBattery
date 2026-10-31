@@ -94,6 +94,19 @@ class AnimationTests(unittest.TestCase):
         self.assertEqual(self.card.level.text(), "未连接")
         self.assertFalse(self.card.bar_slot.isVisible())
 
+    def test_offline_card_does_not_paint_battery_track(self):
+        # 0.4.2：bar_slot.hide() 之后 geometry 仍在，paintEvent 必须自己跳过，
+        # 否则离线卡底部会残留一条灰色电量条。
+        self.card.update_view(_device(76), 20)
+        self.card.finish_animation()
+        self.assertTrue(self.card._bar_visible())
+        self.card.update_view(_device(76, online=False), 20, time.time())
+        self.assertFalse(self.card.bar_slot.isVisible())
+        self.assertFalse(self.card._bar_visible())
+        # 重新上线后恢复
+        self.card.update_view(_device(52), 20)
+        self.assertTrue(self.card._bar_visible())
+
     def test_reduced_motion_jumps_to_target(self):
         ui.animations_enabled = lambda: False
         self.card.update_view(_device(18), 20)

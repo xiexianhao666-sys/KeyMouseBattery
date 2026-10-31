@@ -26,6 +26,11 @@ from .model import Device
 from .poller import Collector, merge_usb_channels
 from .tray import TrayIcons
 
+try:  # Qt 只在 GUI 版本里需要；导入失败时重命名直接不可用
+    from PySide6.QtWidgets import QInputDialog
+except Exception:  # pragma: no cover - 仅在缺少 Qt 时触发
+    QInputDialog = None  # type: ignore[assignment]
+
 LOGGER = logging.getLogger("keymousebattery.app")
 TICK_MS = 1000
 SHOW_POLL_MS = 500
@@ -107,6 +112,7 @@ class App:
         self.collector: Optional[Collector] = None
         self.records: Optional[RecordStore] = None
         self.devices: List[Device] = []
+        self._live: Optional[List[Device]] = None
         self.cfg: dict = {}
         self.config_path: Optional[Path] = None
         self.alerts = alerts_mod.Alerts()
@@ -150,6 +156,9 @@ class App:
         self.window = MainWindow(self.request_refresh)
         self.window.on_close = self._on_window_close
         self.window.quit_button.clicked.connect(self.quit)
+        self.window.device_list.rename_requested.connect(self.prompt_rename)
+        self.window.device_list.reset_requested.connect(
+            lambda key: self.apply_rename(key, ""))
         self.window.settings_page.load(self.cfg)
         self.window.settings_page.apply_requested.connect(self.apply_settings)
         self._reconcile_autostart()
@@ -251,6 +260,7 @@ class App:
         if self._quit or self.collector is None or self.window is None:
             return
         live = self.collector.devices()
+        self._live = list(live)
         devices = live
         if self.records is not None:
             changed = self.records.observe(live)
@@ -284,6 +294,43 @@ class App:
             self._last_round = time.time()
             self._check_alerts(devices, low)
         self._settle_refresh()
+
+    # ---------- 重命名 ----------
+    def _render_current(self) -> None:
+        """改名等本地改动后立即重画，不等下一轮采样。"""
+        if self.window is None:
+            return
+        low = int(self.cfg.get("low", 20))
+        self.window.render_devices(self.devices, int(self.cfg["interval"]), low, time.time())
+
+    def prompt_rename(self, key: str) -> None:
+        """右键「重命名…」：给卡片起一个自己认得的名字，存进设备记录。"""
+        if self.records is None or self.window is None or QInputDialog is None:
+            return
+        record = self.records.records.get(key)
+        current = record.alias if record is not None else ""
+        fallback = record.name if record is not None else ""
+        text, ok = QInputDialog.getText(
+            self.window, "重命名设备",
+            "显示名称（留空恢复默认：%s）" % fallback, text=current)
+        if not ok:
+            return
+        self.apply_rename(key, text)
+
+    def apply_rename(self, key: str, alias: str) -> bool:
+        """写入自定义名称并立即刷新；返回是否真的改了。"""
+        if self.records is None:
+            return False
+        if not self.records.rename(key, alias):
+            return False
+        self.records.save()
+        if self._live is not None:
+            self.devices = merge_usb_channels(self.records.merge(self._live))
+        self._render_current()
+        if self.tray is not None:
+            self.tray.update(self.devices, config.low_visual(int(self.cfg.get("low", 20))),
+                             str(self.cfg.get("tray_icon", "number")))
+        return True
 
     def _settle_refresh(self) -> None:
         """手动刷新后，等某条通道的新一轮结果回来再恢复按钮，不让它一直转。"""
